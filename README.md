@@ -9,7 +9,7 @@ The needed libraries are in requirements.txt.
 ## Experiments
 To run on CIFAR100, excute:
 
-      python FedSaC.py --dataset CIFAR100 --partition 'homo' --n_parties 10 --skew_class 20 --matrix_alpha 0.9 --matrix_beta 1.4
+      python FedSaC.py --dataset cifar100 --partition 'homo' --n_parties 10 --skew_class 20 --matrix_alpha 0.9 --matrix_beta 1.4
 
 To run on CIFAR10, excute:
 
