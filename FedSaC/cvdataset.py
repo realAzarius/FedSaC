@@ -59,6 +59,11 @@ def cifar_dataset_read(dataset, base_path, batch_size, n_parties, partition, bet
     test_image = test_dataset.data
     test_label = np.array(test_dataset.targets)
     n_train = train_label.shape[0]
+    '''
+    net_dataidx_map 字典 key 客户端的索引 value 分配给客户端的数据索引列表
+    traindata_cls_counts (n_parties, num_classes)，记录了每个客户端分配到的每个类别的样本数量。
+    data_distributions (n_parties, num_classes)，记录了每个客户端分配到的每个类别的样本比例。
+    '''
     net_dataidx_map, traindata_cls_counts, data_distributions = partition_data(partition, n_train, n_parties,
                                                                                train_label, beta, skew_class)
 
@@ -75,10 +80,10 @@ def cifar_dataset_read(dataset, base_path, batch_size, n_parties, partition, bet
         val_loader = DataLoader(dataset=val_dataset, batch_size=batch_size, shuffle=False)
         train_dataloaders.append(train_loader)
         val_dataloaders.append(val_loader)
-
+    # 每个客户端的训练和验证数据集的大小
     for i in range(n_parties):
         print("len train", len(train_dataloaders[i].dataset), len(val_dataloaders[i].dataset))
     test_dataset = Cifar_Truncated(data=test_image, labels=test_label, transform=transform_test)
     test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=False)
-    print("len test", len(test_loader.dataset))
+    print("len test", len(test_loader.dataset)) # 测试数据集的大小
     return train_dataloaders, val_dataloaders, test_loader, net_dataidx_map, traindata_cls_counts, data_distributions
